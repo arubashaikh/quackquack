@@ -1,0 +1,34 @@
+name: Build QuackQuack EXE
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Get the game files
+        uses: actions/checkout@v4
+
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install Pygame and PyInstaller
+        run: |
+          pip install pygame pyinstaller
+
+      - name: Create EXE
+        run: |
+          pyinstaller --onefile --windowed quackquack.py
+
+      - name: Save the EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: QuackQuack-Windows
+          path: dist/quackquack.exe
