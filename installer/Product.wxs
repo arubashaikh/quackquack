@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="*" Name="QuackQuack" Language="1033" Version="1.0.0.0" Manufacturer="Aruba Shaikh" UpgradeCode="9B0C2F1D-6D1B-4D31-9F7C-8A5B2D4E6C11">
+    <Package InstallerVersion="500" Compressed="yes" InstallScope="perMachine" />
+    <MajorUpgrade DowngradeErrorMessage="A newer version of QuackQuack is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="INSTALLFOLDER" Name="QuackQuack">
+          <Component Id="MainComponent" Guid="*">
+            <File Id="QuackQuackExe" Source="$(var.SourceDir)\QuackQuack.exe" KeyPath="yes" />
+            <Shortcut Id="StartMenuShortcut" Directory="ProgramMenuFolder" Name="QuackQuack" WorkingDirectory="INSTALLFOLDER" Icon="QuackQuackIcon" Advertise="no" />
+          </Component>
+        </Directory>
+      </Directory>
+      <Directory Id="ProgramMenuFolder" Name="Programs" />
+    </Directory>
+
+    <Icon Id="QuackQuackIcon" SourceFile="$(var.SourceDir)\QuackQuack.exe" />
+
+    <Feature Id="ProductFeature" Title="QuackQuack" Level="1">
+      <ComponentRef Id="MainComponent" />
+    </Feature>
+
+    <UIRef Id="WixUI_Minimal" />
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+  </Product>
+</Wix>
