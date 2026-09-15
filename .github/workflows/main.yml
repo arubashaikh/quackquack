@@ -1,4 +1,4 @@
-name: Build QuackQuack EXE
+name: Build QuackQuack EXE and MSI
 
 on:
   push:
@@ -17,7 +17,7 @@ jobs:
       - name: Install Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.13"
+          python-version: "3.12"
 
       - name: Install Pygame and PyInstaller
         run: |
@@ -28,8 +28,21 @@ jobs:
         run: |
           python -m PyInstaller --onefile --windowed --name QuackQuack quackquack.py
 
-      - name: Save the EXE
+      - name: Install WiX Toolset
+        shell: powershell
+        run: choco install wixtoolset --version=3.14.1 -y --no-progress
+
+      - name: Create MSI installer
+        shell: powershell
+        run: |
+          New-Item -ItemType Directory -Force -Path installer\build | Out-Null
+          candle.exe -dSourceDir="$pwd\dist" installer\Product.wxs -out installer\build\Product.wixobj
+          light.exe -ext WixUIExtension -out dist\QuackQuack-Setup.msi installer\build\Product.wixobj
+
+      - name: Save EXE and MSI
         uses: actions/upload-artifact@v4
         with:
           name: QuackQuack-Windows
-          path: dist/QuackQuack.exe
+          path: |
+            dist/QuackQuack.exe
+            dist/QuackQuack-Setup.msi
