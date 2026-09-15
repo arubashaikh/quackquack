@@ -21,14 +21,15 @@ jobs:
 
       - name: Install Pygame and PyInstaller
         run: |
-          pip install pygame pyinstaller
+          python -m pip install --upgrade pip
+          python -m pip install pygame pyinstaller
 
       - name: Create EXE
         run: |
-          pyinstaller --onefile --windowed quackquack.py
+          python -m PyInstaller --onefile --windowed --name QuackQuack quackquack.py
 
       - name: Save the EXE
         uses: actions/upload-artifact@v4
         with:
           name: QuackQuack-Windows
-          path: dist/quackquack.exe
+          path: dist/QuackQuack.exe
